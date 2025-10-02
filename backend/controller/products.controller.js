@@ -16,7 +16,7 @@ export async function getProducts(req, res, next) {
 export async function createProduct(req, res, next) {
     const product = req.body; // user will send the request data to the backend server inside the body property in JSON
 
-    if (!product.productName || !product.price || !product.img) {
+    if (!product?.productName || !product?.price || !product?.img) {
         return next(new AppError(400, 'Please provide all required fields'));
     }
 

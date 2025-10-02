@@ -6,6 +6,7 @@ import productRoutes from './routes/products.route.js';
 
 dotenv.config();
 const app = express();
+const PORT = process.env?.PORT || 5000;
 
 app.use(express.json()); // lets us use JSON response from the request body
 /* 
@@ -21,7 +22,7 @@ app.use(errorHandler);
 /*
 ** Listen to port 5000 and connect to database
 */
-app.listen(5000, () => {
+app.listen(PORT, () => {
     dbConnection();
-    console.log('Server started at https://localhost:5000')
+    console.log(`Server started at https://localhost:${PORT}`);
 });
