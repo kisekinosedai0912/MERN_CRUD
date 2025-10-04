@@ -3,10 +3,10 @@ import Product from '../model/Products.js';
 
 export async function getProducts(req, res, next) {
     try {
-        const items = await Product.find({});
+        const items = (await Product.find({})).sort({ createdAt: -1 }); // retrieve from the newest data (recently added)
         if (!items) return next(new AppError(404, 'Products not found'));
         
-        res.status(201).json({success: true, data: items});
+        res.status(200).json({success: true, count: items.length, data: items});
     } 
     catch (error) {
         next(error);
@@ -14,15 +14,22 @@ export async function getProducts(req, res, next) {
 }
 
 export async function createProduct(req, res, next) {
-    const product = req.body; // user will send the request data to the backend server inside the body property in JSON
+    const { productName, price, img } = req.body; // user will send the request data to the backend server inside the body property in JSON
 
-    if (!product?.productName || !product?.price || !product?.img) {
+    if (!productName || !price || !img) {
         return next(new AppError(400, 'Please provide all required fields'));
     }
 
-    const newProduct = new Product(product);
+    // Price validation
+    if (isNaN(price) || price <= 0) {
+        return next(new AppError(400, 'Price must be a positive number'));
+    }
+
     try {
-        await newProduct.save();
+        const newProduct = await Product.create({
+            productName, price: Number(price), img
+        });
+
         res.status(201).json({success: true, data: newProduct});
 
     } catch (error) {
