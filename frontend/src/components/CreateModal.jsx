@@ -1,11 +1,13 @@
 import {useProductStore} from '../store/productHook.js'
 import { Loader2 } from "lucide-react";
 import { useCallback } from 'react'
+import { useToast } from "../components/ui/use-toast";
 
 const CreateModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     const { createProduct, loading } = useProductStore();
+    const { toast } = useToast()
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
@@ -24,10 +26,18 @@ const CreateModal = ({ isOpen, onClose }) => {
         const result = await createProduct(newProduct);
         
         if (result.success) {
+            toast({
+                title: "✅ Success",
+                description: result.message,
+            })
             form.reset();
             onClose();
         } else {
-            console.error(result.message);
+            toast({
+                title: "❌ Error",
+                description: result.message,
+                variant: "destructive", 
+            })
         }
     }, [createProduct, onClose]);
 

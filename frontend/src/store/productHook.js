@@ -24,15 +24,15 @@ export const useProductStore = create(
                         const response = await api.post('/products', newProduct);
                         const responseData = response.data;
                         
-                        set((state) => ({ 
-                            products: [...state.products, responseData],
+                        set(prevState => ({ 
+                            products: [...prevState.products, responseData],
                             loading: false 
                         }));
 
                         return { 
                             success: true, 
                             message: 'Product added successfully!',
-                            data: response.data.data 
+                            data: responseData
                         };
 
                     } catch (error) {
