@@ -11,11 +11,7 @@ const app = express();
 const PORT = process.env?.PORT || 5000;
 const BASE_URL = process.env?.BASE_URL || 'https://localhost';
 
-app.use(cors({
-  origin: ['https://mern-crud-01p8.onrender.com'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json()); // lets us use JSON response from the request body
 /* 
 ** Defining all routes to use 
