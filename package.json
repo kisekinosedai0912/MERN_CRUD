@@ -6,7 +6,9 @@
   "scripts": {
     "backend": "nodemon backend/server.js",
     "frontend": "cd frontend && pnpm run dev",
-    "dev": "concurrently \"pnpm run backend\" \"pnpm run frontend\""
+    "dev": "concurrently \"pnpm run backend\" \"pnpm run frontend\"",
+    "build": "cd frontend && pnpm install && pnpm run build",
+    "start": "node backend/server.js"
   },
   "type": "module",
   "keywords": [],
