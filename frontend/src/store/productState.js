@@ -42,11 +42,21 @@ export const useProductStore = create(
                         return { success: false, message: error.message };
                     }
                 },
-                fetchProducts: async () => {
-                    const response = await api.get('/products');
-                    const { data } = response.data;
+                fetchProducts: async (page = 1, append = false) => {
+                    try {
+                        set({ loading: true });
+                        const response = await api.get(`/products?page=${page}&limit=8`);
+                        const { data, totalPages } = response.data;
+                    
+                        set(prevState => ({
+                            products: append ? [...prevState.products, ...data] : data,
+                            loading: false,
+                            totalPages,
+                        }));
 
-                    set({products: data});
+                    } catch (error) {
+                        set({ loading: false, error: error.message });
+                    }
                 },
                 updateProduct: async (id, updatedData) => {
                     if (get().loading) {

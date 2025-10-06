@@ -3,12 +3,27 @@ import Product from '../model/Products.js';
 
 export async function getProducts(req, res, next) {
     try {
-        const items = await Product.find({}).sort({ createdAt: -1 }); // retrieve from the newest data (recently added)
-        if (!items) return next(new AppError(404, 'Products not found'));
+        const page = parseInt(req.query.page) || 1; // show 1 per page
+        const limit = parseInt(req.query.limit) || 8; // 6 per page (same as grid rows)
+        const skip = (page - 1) * limit;
+    
+        const items = await Product.find({})
+            .sort({ createdAt: 1 })
+            .skip(skip)
+            .limit(limit);
+    
+        const total = await Product.countDocuments();
+    
+        res.status(200).json({
+            success: true,
+            count: items.length,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+            data: items,
+        });
         
-        res.status(200).json({success: true, count: items.length, data: items});
-    } 
-    catch (error) {
+    } catch (error) {
         next(error);
     }
 }
