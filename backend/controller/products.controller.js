@@ -3,7 +3,7 @@ import Product from '../model/Products.js';
 
 export async function getProducts(req, res, next) {
     try {
-        const items = (await Product.find({})).sort({ createdAt: -1 }); // retrieve from the newest data (recently added)
+        const items = await Product.find({}).sort({ createdAt: -1 }); // retrieve from the newest data (recently added)
         if (!items) return next(new AppError(404, 'Products not found'));
         
         res.status(200).json({success: true, count: items.length, data: items});
@@ -58,7 +58,7 @@ export async function deleteProduct(req, res, next) {
         const deletedProduct = await Product.findByIdAndDelete(id);
         if (!deletedProduct) return next(new AppError(404, 'Product not found'));
 
-        res.status(201).json({sucess: true, message: 'Product deleted successfully!'});
+        res.status(201).json({success: true, message: 'Product deleted successfully!'});
 
     } catch (error) {   
         next(error);

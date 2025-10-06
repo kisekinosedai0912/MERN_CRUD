@@ -1,4 +1,4 @@
-import {useProductStore} from '../store/productHook.js'
+import {useProductStore} from '../store/productState.js'
 import { Loader2 } from "lucide-react";
 import { useCallback } from 'react'
 import { useToast } from "../components/ui/use-toast";
@@ -23,19 +23,20 @@ const CreateModal = ({ isOpen, onClose }) => {
         if (!newProduct.productName.trim()) return;
         if (newProduct.price <= 0) return;
 
-        const result = await createProduct(newProduct);
+        const {success, message, data} = await createProduct(newProduct);
         
-        if (result.success) {
+        if (success) {
             toast({
                 title: "✅ Success",
-                description: result.message,
+                description: message,
             })
+            console.log(data)
             form.reset();
             onClose();
         } else {
             toast({
                 title: "❌ Error",
-                description: result.message,
+                description: message,
                 variant: "destructive", 
             })
         }
